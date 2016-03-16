@@ -35,6 +35,8 @@ module.exports = function(dest, options) {
                 path.basename(file.relative, path.extname(file.relative))
             );
         },
+        templatesVar: 'templates',
+        globalTemplates: false,
         hoganModule: 'hogan'
     }, options || {});
 
@@ -63,15 +65,20 @@ module.exports = function(dest, options) {
         }
         var lines = [];
         for (var name in templates) {
-            lines.push('    templates[\'' + name + '\'] = new Hogan.Template(' + templates[name] + ');');
+            lines.push('    ' + options.templatesVar + '[\'' + name + '\'] = new Hogan.Template(' + templates[name] + ');');
         }
         // Unwrapped
-        lines.unshift('    var templates = {};');
+
+        if (!options.globalTemplates) {
+          lines.unshift('    var ' + options.templatesVar + ' = {};');
+        } else {
+          lines.unshift('    if (typeof ' + options.templatesVar + ' === "undefined") { ' + options.templatesVar + ' = {}; }');
+        }
 
         // All wrappers require a hogan module
         if (options.wrapper) {
             lines.unshift('    var Hogan = require(\'' + options.hoganModule  + '\');');
-            lines.push('    return templates;');
+            lines.push('    return ' + options.templatesVar + ';');
         }
         // AMD wrapper
         if (options.wrapper === 'amd') {

@@ -78,6 +78,14 @@ Options passed through to `hogan.compile`. `asString` will be set depending on w
 
 A function that will be passed the file and should return a name for the template. By default uses the relative path and basename of the file without an extension.
 
+### templatesVar `string`
+
+Name of the variable templates will be assigned.
+
+### globalTemplates `boolean`
+
+Set to true if you're going to use `window.templates` or similar. When set to false `var` will be added.
+
 ### hoganModule `string`
 
 The name of the hogan module *in your app*, defaults to `hogan`. If you're not using a wrapper then the global `Hogan` must be available.
